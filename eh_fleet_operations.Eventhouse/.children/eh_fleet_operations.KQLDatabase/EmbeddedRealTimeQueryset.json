@@ -1,0 +1,46 @@
+{
+  "queryset": {
+    "version": "1.0.0",
+    "dataSources": [
+      {
+        "id": "aeb64078-78b3-43ea-a9c5-2e0cc7f16d59",
+        "clusterUri": "https://trd-b5qxcqmvavnfyffqdz.z7.kusto.fabric.microsoft.com",
+        "type": "Fabric",
+        "databaseItemId": "235e0e07-66dd-44e4-ad23-b7915985ee73"
+      }
+    ],
+    "tabs": [
+      {
+        "id": "c925830d-e7f6-4163-aae1-c3bb1420bd8d",
+        "content": "//***********************************************************************************************************\n// Here are two articles to help you get started with KQL:\n// KQL reference guide - https://aka.ms/KQLguide\n// SQL - KQL conversions - https://aka.ms/sqlcheatsheet\n//***********************************************************************************************************\n\n// Use \"take\" to view a sample number of records in the table and check the data.\nYOUR_TABLE_HERE\n| take 100\n\n// See how many records are in the table.\nYOUR_TABLE_HERE\n| count\n\n// This query returns the number of ingestions per hour in the given table.\nYOUR_TABLE_HERE\n| summarize IngestionCount = count() by bin(ingestion_time(), 1h)\n\n",
+        "title": "Tab",
+        "dataSourceId": "aeb64078-78b3-43ea-a9c5-2e0cc7f16d59"
+      },
+      {
+        "id": "321ff145-75e4-4130-9705-e1283f182953",
+        "content": "// Use 'take' to view a sample number of records in the table and check the data.\nFleetTelemetry\n| take 10\n\nFleetTelemetry\n| count",
+        "title": "",
+        "dataSourceId": "aeb64078-78b3-43ea-a9c5-2e0cc7f16d59"
+      },
+      {
+        "id": "19c0b069-a8b2-4c95-b115-b4b6450b3325",
+        "content": "// Use 'take' to view a sample number of records in the table and check the data.\nFleetTelemetry\n| summarize EventCount = count() by BusLine\n| order by EventCount desc\n",
+        "title": "",
+        "dataSourceId": "aeb64078-78b3-43ea-a9c5-2e0cc7f16d59"
+      },
+      {
+        "id": "40ac205f-01af-4b63-8718-5f88d0722784",
+        "content": "FleetTelemetry\n| top 20 by Timestamp desc\n| project Timestamp, TripId, BusLine, StationNumber, ScheduleTime, Properties",
+        "title": "",
+        "dataSourceId": "aeb64078-78b3-43ea-a9c5-2e0cc7f16d59"
+      },
+      {
+        "id": "0c17f762-21f7-4bd4-a904-c75fc3a5817f",
+        "content": "FleetTelemetry\n| summarize EventCount = count() by BusLine\n| order by EventCount desc\n| render columnchart",
+        "title": "",
+        "dataSourceId": "aeb64078-78b3-43ea-a9c5-2e0cc7f16d59"
+      }
+    ],
+    "querysetType": "Embedded"
+  }
+}

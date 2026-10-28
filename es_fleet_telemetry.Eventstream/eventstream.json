@@ -1,0 +1,97 @@
+{
+  "sources": [
+    {
+      "id": "7da1ba3d-27c1-4e50-97c7-29c928e168fd",
+      "name": "src_buses_sample",
+      "type": "SampleData",
+      "properties": {
+        "type": "Buses"
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "id": "41c45c61-93a5-41d0-93ff-e61b3758035c",
+      "name": "dest_fleet_eventhouse",
+      "type": "Eventhouse",
+      "properties": {
+        "dataIngestionMode": "ProcessedIngestion",
+        "workspaceId": "00000000-0000-0000-0000-000000000000",
+        "itemId": "5985ee73-b791-ad23-44e4-66dd235e0e07",
+        "databaseName": "eh_fleet_operations",
+        "tableName": "FleetTelemetry",
+        "inputSerialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        }
+      },
+      "inputNodes": [
+        {
+          "name": "es_fleet_telemetry-stream"
+        }
+      ],
+      "inputSchemas": [
+        {
+          "name": "es_fleet_telemetry-stream",
+          "schema": {
+            "columns": [
+              {
+                "name": "Timestamp",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "TripId",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "BusLine",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "StationNumber",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "ScheduleTime",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "Properties",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "streams": [
+    {
+      "id": "ba6d7068-9790-45d5-b429-7caeb8f92c26",
+      "name": "es_fleet_telemetry-stream",
+      "type": "DefaultStream",
+      "properties": {},
+      "inputNodes": [
+        {
+          "name": "src_buses_sample"
+        }
+      ]
+    }
+  ],
+  "operators": [],
+  "compatibilityLevel": "1.1"
+}

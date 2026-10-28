@@ -1,0 +1,96 @@
+{
+  "schema_version": 90,
+  "flavor": "RTDashboard_Regular",
+  "tiles": [
+    {
+      "id": "8aa9cee5-e8c6-4211-a760-3839391ddc8f",
+      "title": "New Tile",
+      "hideTitle": true,
+      "visualType": "column",
+      "pageId": "30854db5-e03d-4948-a9dc-720179e4d616",
+      "layout": {
+        "width": 9,
+        "height": 7,
+        "x": 0,
+        "y": 0
+      },
+      "queryRef": {
+        "kind": "query",
+        "queryId": "001326ce-db69-4074-aef7-18db1f3a5ee7"
+      },
+      "visualOptions": {
+        "xColumn": null,
+        "multipleYAxes": {
+          "additional": [],
+          "showMultiplePanels": false,
+          "base": {
+            "horizontalLines": [],
+            "yAxisScale": "linear",
+            "yAxisMaximumValue": null,
+            "yAxisMinimumValue": null,
+            "columns": [],
+            "label": "",
+            "id": "-1"
+          }
+        },
+        "yColumns": null,
+        "seriesColumns": null,
+        "anomalyColumns": null,
+        "map__longitudeColumn": null,
+        "map__latitudeColumn": null,
+        "selectedDataOnLoad": {
+          "all": true,
+          "limit": 10
+        }
+      }
+    }
+  ],
+  "baseQueries": [],
+  "parameters": [
+    {
+      "kind": "duration",
+      "id": "69d02eaa-b2e6-4131-aa20-81348c45ebce",
+      "displayName": "Time range",
+      "description": "",
+      "beginVariableName": "_startTime",
+      "endVariableName": "_endTime",
+      "defaultValue": {
+        "kind": "dynamic",
+        "count": 1,
+        "unit": "hours"
+      },
+      "showOnPages": {
+        "kind": "all"
+      }
+    }
+  ],
+  "dataSources": [
+    {
+      "id": "c3be8e4c-ff6c-49b4-85e8-de249702af50",
+      "kind": "kusto-trident",
+      "name": "eh_fleet_operations",
+      "clusterUri": "",
+      "databaseArtifactId": "235e0e07-66dd-44e4-ad23-b7915985ee73",
+      "database": "5985ee73-b791-ad23-44e4-66dd235e0e07",
+      "workspace": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+  "pages": [
+    {
+      "name": "Page 1",
+      "id": "30854db5-e03d-4948-a9dc-720179e4d616"
+    }
+  ],
+  "queries": [
+    {
+      "dataSource": {
+        "kind": "inline",
+        "dataSourceId": "c3be8e4c-ff6c-49b4-85e8-de249702af50"
+      },
+      "text": "FleetTelemetry\r\n| summarize EventCount = count() by BusLine\r\n| order by EventCount desc\r\n| render columnchart",
+      "id": "001326ce-db69-4074-aef7-18db1f3a5ee7",
+      "usedVariables": []
+    }
+  ],
+  "embeddedApps": []
+}
