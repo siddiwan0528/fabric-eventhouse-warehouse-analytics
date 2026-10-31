@@ -12,7 +12,7 @@
     "tabs": [
       {
         "id": "c925830d-e7f6-4163-aae1-c3bb1420bd8d",
-        "content": "//***********************************************************************************************************\n// Here are two articles to help you get started with KQL:\n// KQL reference guide - https://aka.ms/KQLguide\n// SQL - KQL conversions - https://aka.ms/sqlcheatsheet\n//***********************************************************************************************************\n\n// Use \"take\" to view a sample number of records in the table and check the data.\nYOUR_TABLE_HERE\n| take 100\n\n// See how many records are in the table.\nYOUR_TABLE_HERE\n| count\n\n// This query returns the number of ingestions per hour in the given table.\nYOUR_TABLE_HERE\n| summarize IngestionCount = count() by bin(ingestion_time(), 1h)\n\n",
+        "content": "//***********************************************************************************************************\n// Here are two articles to help you get started with KQL:\n// KQL reference guide - https://aka.ms/KQLguide\n// SQL - KQL conversions - https://aka.ms/sqlcheatsheet\n//***********************************************************************************************************\n\n// Use \"take\" to view a sample number of records in the table and check the data.\nFleetTelemetry\n| summarize Copies = count()\n    by Timestamp, TripId, BusLine, StationNumber,\n       ScheduleTime, PropertiesText = tostring(Properties)\n| summarize\n    SourceRows = sum(Copies),\n    DistinctPayloadGroups = count(),\n    ExactDuplicateExcess = sum(Copies - 1),\n    DuplicateGroups = countif(Copies > 1),\n    MaximumCopies = max(Copies)\n\n// See how many records are in the table.\nYOUR_TABLE_HERE\n| count\n\n// This query returns the number of ingestions per hour in the given table.\nYOUR_TABLE_HERE\n| summarize IngestionCount = count() by bin(ingestion_time(), 1h)\n\n",
         "title": "Tab",
         "dataSourceId": "aeb64078-78b3-43ea-a9c5-2e0cc7f16d59"
       },
@@ -37,6 +37,12 @@
       {
         "id": "0c17f762-21f7-4bd4-a904-c75fc3a5817f",
         "content": "FleetTelemetry\n| summarize EventCount = count() by BusLine\n| order by EventCount desc\n| render columnchart",
+        "title": "",
+        "dataSourceId": "aeb64078-78b3-43ea-a9c5-2e0cc7f16d59"
+      },
+      {
+        "id": "c4565d9d-c021-42c2-a93e-2e95c243b4fd",
+        "content": "FleetTelemetry\n| extend IngestionTime = ingestion_time()\n| summarize\n    Copies = count(),\n    RowsWithIngestionTime = countif(isnotnull(IngestionTime)),\n    DistinctIngestionTimes = dcount(IngestionTime),\n    FirstIngested = min(IngestionTime),\n    LastIngested = max(IngestionTime)\n    by Timestamp, TripId, BusLine, StationNumber,\n       ScheduleTime, PropertiesText = tostring(Properties)\n| where Copies > 1\n| project\n    Timestamp,\n    TripId,\n    Copies,\n    RowsWithIngestionTime,\n    DistinctIngestionTimes,\n    FirstIngested,\n    LastIngested\n| top 20 by Copies desc",
         "title": "",
         "dataSourceId": "aeb64078-78b3-43ea-a9c5-2e0cc7f16d59"
       }

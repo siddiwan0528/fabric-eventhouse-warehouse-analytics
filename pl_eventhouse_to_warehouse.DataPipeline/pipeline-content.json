@@ -1,5 +1,179 @@
 {
   "properties": {
-    "activities": []
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "KustoDatabaseSource",
+            "query": "\nFleetTelemetry\n| extend Props = parse_json(Properties)\n| project\n    EventTimestamp = todatetime(Timestamp),\n    TripId = tostring(TripId),\n    BusLine = toint(BusLine),\n    StationNumber = toint(StationNumber),\n    ScheduleTime = todatetime(ScheduleTime),\n    BusState = tostring(Props.BusState),\n    TimeToNextStation = tostring(Props.TimeToNextStation),\n    PropertiesJson = tostring(Properties)\n",
+            "noTruncation": true,
+            "queryTimeout": "01:00:00",
+            "datasetSettings": {
+              "type": "KustoDatabaseTable",
+              "typeProperties": {
+                "table": "FleetTelemetry"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "eh_fleet_operations",
+                "properties": {
+                  "type": "KustoDatabase",
+                  "typeProperties": {
+                    "endpoint": "https://trd-b5qxcqmvavnfyffqdz.z7.kusto.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "database": "5985ee73-b791-ad23-44e4-66dd235e0e07"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "StgFleetTelemetry"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "wh_fleet_operations",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "dc8c0705-5b53-a138-4dee-8abf014ce854",
+                    "endpoint": "sovzol5k44jebct222jdivlkp4-h2o3dkzdq6su7du2d6wevxfla4.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "EventTimestamp",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "EventTimestamp",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "TripId",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "TripId",
+                  "physicalType": "varchar",
+                  "length": "50"
+                }
+              },
+              {
+                "source": {
+                  "name": "BusLine",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "BusLine",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "StationNumber",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "StationNumber",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "ScheduleTime",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "ScheduleTime",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              },
+              {
+                "source": {
+                  "name": "BusState",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "BusState",
+                  "physicalType": "varchar",
+                  "length": "30"
+                }
+              },
+              {
+                "source": {
+                  "name": "TimeToNextStation",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "TimeToNextStation",
+                  "physicalType": "varchar",
+                  "length": "50"
+                }
+              },
+              {
+                "source": {
+                  "name": "PropertiesJson",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "PropertiesJson",
+                  "physicalType": "varchar",
+                  "length": "2000"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "cpy_eventhouse_to_wh_staging",
+        "description": "Copy live fleet telemetry from Eventhouse KQL database into the Fabric Warehouse staging table.",
+        "dependsOn": []
+      }
+    ]
   }
 }
