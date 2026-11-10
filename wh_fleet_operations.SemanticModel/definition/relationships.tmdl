@@ -1,0 +1,5 @@
+relationship fc5442d0-10f8-4653-b5e2-35b527eabf8f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: vw_FleetDailyKPI_Gold.CalendarDate
+	toColumn: LocalDateTable_089b8bdf-9abe-44d1-a72c-bd71f2b4ea5c.Date
+

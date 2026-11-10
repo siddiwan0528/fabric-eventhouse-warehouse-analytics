@@ -1,0 +1,156 @@
+table vw_FleetDailyKPI_Gold
+	lineageTag: 919d9441-5b1c-49db-aee1-05c01e98bebb
+
+	measure 'Weighted Average ETA (Seconds)' =
+			
+			DIVIDE(
+			    SUMX(
+			        vw_FleetDailyKPI_Gold,
+			        vw_FleetDailyKPI_Gold[AverageETASeconds] * vw_FleetDailyKPI_Gold[UniquePayloadRows]
+			    ),
+			    SUM(vw_FleetDailyKPI_Gold[UniquePayloadRows]),
+			    0
+			)
+		lineageTag: 9ac34b88-1d6f-4edd-8617-448c816b69c6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Unique Payload Rows' = SUM(vw_FleetDailyKPI_Gold[UniquePayloadRows])
+		formatString: 0
+		lineageTag: 4b7da505-6612-4c96-bb2d-ddb08b9354ad
+
+	measure 'Source Rows Received' = SUM(vw_FleetDailyKPI_Gold[SourceRowsReceived])
+		formatString: 0
+		lineageTag: c75e3a00-7c05-4309-8ae2-9d90ba9204c9
+
+	measure 'Exact-Payload Excess Rows' = SUM(vw_FleetDailyKPI_Gold[DuplicateExcessRows])
+		formatString: 0
+		lineageTag: 5bd3c6dc-922e-4990-9aab-800f6393f0bd
+
+	measure 'Bus Lines Covered' = DISTINCTCOUNT(vw_FleetDailyKPI_Gold[BusLineCode])
+		formatString: 0
+		lineageTag: aa6625e6-74e9-4fde-9fb1-6d6f32d70f40
+
+	column CalendarDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4f68ac92-f8e8-41a9-8ca0-23a86c3c1605
+		summarizeBy: none
+		sourceColumn: CalendarDate
+
+		variation Variation
+			isDefault
+			relationship: fc5442d0-10f8-4653-b5e2-35b527eabf8f
+			defaultHierarchy: LocalDateTable_089b8bdf-9abe-44d1-a72c-bd71f2b4ea5c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column BusLineCode
+		dataType: int64
+		formatString: 0
+		lineageTag: 40cc26fd-3df2-4072-aaa6-2692e72904fe
+		summarizeBy: count
+		sourceColumn: BusLineCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column BusLineName
+		dataType: string
+		lineageTag: 952d0f57-93fd-455c-b676-63047ff42c35
+		summarizeBy: none
+		sourceColumn: BusLineName
+
+		annotation SummarizationSetBy = Automatic
+
+	column UniquePayloadRows
+		dataType: int64
+		formatString: 0
+		lineageTag: a1a49d08-48bc-48d4-baa5-3a2f8aec2321
+		summarizeBy: sum
+		sourceColumn: UniquePayloadRows
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceRowsReceived
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f6da3d0-ab80-4ffb-b7f6-479447f10838
+		summarizeBy: sum
+		sourceColumn: SourceRowsReceived
+
+		annotation SummarizationSetBy = Automatic
+
+	column DuplicateExcessRows
+		dataType: int64
+		formatString: 0
+		lineageTag: 0ff74541-98f5-47c9-abf4-afa915491ed6
+		summarizeBy: sum
+		sourceColumn: DuplicateExcessRows
+
+		annotation SummarizationSetBy = Automatic
+
+	column DistinctTripIds
+		dataType: int64
+		formatString: 0
+		lineageTag: 058fb365-c14b-4d22-816b-9f4ddea1425b
+		summarizeBy: sum
+		sourceColumn: DistinctTripIds
+
+		annotation SummarizationSetBy = Automatic
+
+	column ArrivedPayloadRows
+		dataType: int64
+		formatString: 0
+		lineageTag: 90b29438-e351-4bd0-9624-e3fd0df2a2d0
+		summarizeBy: sum
+		sourceColumn: ArrivedPayloadRows
+
+		annotation SummarizationSetBy = Automatic
+
+	column InMotionPayloadRows
+		dataType: int64
+		formatString: 0
+		lineageTag: cc6cb81c-5429-46f9-9b4d-a62a99e88d7c
+		summarizeBy: sum
+		sourceColumn: InMotionPayloadRows
+
+		annotation SummarizationSetBy = Automatic
+
+	column NotInStationPayloadRows
+		dataType: int64
+		formatString: 0
+		lineageTag: fd96f8af-4088-48d8-9bc8-57fd47ef0df3
+		summarizeBy: sum
+		sourceColumn: NotInStationPayloadRows
+
+		annotation SummarizationSetBy = Automatic
+
+	column AverageETASeconds
+		dataType: double
+		lineageTag: 9c41dd34-0d22-4ba2-ba93-d856adb072eb
+		summarizeBy: sum
+		sourceColumn: AverageETASeconds
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MonthDay = FORMAT(vw_FleetDailyKPI_Gold[CalendarDate], "mmm dd")
+		lineageTag: 55539d38-ba1e-43ca-af9c-d446b98a8533
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition vw_FleetDailyKPI_Gold = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("sovzol5k44jebct222jdivlkp4-h2o3dkzdq6su7du2d6wevxfla4.datawarehouse.fabric.microsoft.com", "wh_fleet_operations"),
+				    dbo_vw_FleetDailyKPI_Gold = Source{[Schema="dbo",Item="vw_FleetDailyKPI_Gold"]}[Data]
+				in
+				    dbo_vw_FleetDailyKPI_Gold
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "wh_fleet_operations"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "11a3cba8-0478-84a6-4f85-6b272fc5d78c"
+  }
+}
